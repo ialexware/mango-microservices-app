@@ -1,0 +1,9 @@
+﻿@model int
+<div class="text-center">
+    <h1>Thank you for your order!</h1>
+    <h4 class="text-warning pb-3">Your order number is @Model</h4>
+    <p>We will email you the order details.</p>
+    <img src="/images/order.PNG" width="80%" />
+    <br />
+    <p>Click <a href="@Url.Action("Index", "Home")">here</a> to continue shopping.</p>
+</div>

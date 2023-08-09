@@ -1,9 +1,11 @@
-﻿using Mango.Services.AuthAPI.Data;
+﻿using Mango.MessageBus;
+using Mango.Services.AuthAPI.Data;
 using Mango.Services.AuthAPI.Models;
 using Mango.Services.AuthAPI.Models.Dto;
 using Mango.Services.AuthAPI.Service.IService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Mango.Services.AuthAPI.Service
 {
@@ -13,14 +15,18 @@ namespace Mango.Services.AuthAPI.Service
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IJwtTokenGenerato _jwtTokenGenerato;
+        private readonly IMessageBus _messageBus;
+        private IConfiguration _configuration;
 
 
-        public AuthService(AppDbContext db, IJwtTokenGenerato jwtTokenGenerato, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AuthService(AppDbContext db, IJwtTokenGenerato jwtTokenGenerato, UserManager<ApplicationUser> userManager, IMessageBus messageBus, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
         {
             _jwtTokenGenerato = jwtTokenGenerato;
             _db = db;
             _userManager = userManager;
             _roleManager = roleManager;
+            _messageBus = messageBus;
+            _configuration = configuration;
         }
 
         public async Task<bool> AssignRole(string email, string roleName)
@@ -98,6 +104,8 @@ namespace Mango.Services.AuthAPI.Service
                         Name = userToReturn.FirstName,
                         PhoneNumber = userToReturn.PhoneNumber
                     };
+                    await _messageBus.PublishMessage(userDto, _configuration.GetValue<string>("TopicAndQueueNames:EmailNewUserQueue"));
+
                     return "";
                 }
                 else
