@@ -37,8 +37,10 @@ namespace Mango.Services.ProductAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageLocalPathUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -58,6 +60,7 @@ namespace Mango.Services.ProductAPI.Migrations
                             ProductId = 1,
                             CategoryName = "Appetizer",
                             Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
+                            ImageLocalPathUrl = "",
                             ImageUrl = "https://placehold.co/603x403",
                             Name = "Samosa",
                             Price = 15.0
@@ -67,6 +70,7 @@ namespace Mango.Services.ProductAPI.Migrations
                             ProductId = 2,
                             CategoryName = "Appetizer",
                             Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
+                            ImageLocalPathUrl = "",
                             ImageUrl = "https://placehold.co/602x402",
                             Name = "Paneer Tikka",
                             Price = 13.99
@@ -76,6 +80,7 @@ namespace Mango.Services.ProductAPI.Migrations
                             ProductId = 3,
                             CategoryName = "Dessert",
                             Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
+                            ImageLocalPathUrl = "",
                             ImageUrl = "https://placehold.co/601x401",
                             Name = "Sweet Pie",
                             Price = 10.99
@@ -85,6 +90,7 @@ namespace Mango.Services.ProductAPI.Migrations
                             ProductId = 4,
                             CategoryName = "Entree",
                             Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
+                            ImageLocalPathUrl = "",
                             ImageUrl = "https://placehold.co/600x400",
                             Name = "Pav Bhaji",
                             Price = 15.0

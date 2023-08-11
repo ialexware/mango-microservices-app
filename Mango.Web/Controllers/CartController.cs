@@ -79,7 +79,7 @@ namespace Mango.Web.Controllers
             if (response != null && response.IsSuccess)
             {
                 OrderHeaderDto orderHeaderDto = JsonConvert.DeserializeObject<OrderHeaderDto>(Convert.ToString(response.Result));
-                if (orderHeaderDto.Status == SD.Status_Aproved)
+                if (orderHeaderDto.Status == SD.Status_Approved)
                 {
                     return View(orderId);
                 }
@@ -94,7 +94,7 @@ namespace Mango.Web.Controllers
             ResponseDto? response = await _cartService.RemoveFromCartAsync(cartDetailsId);
             if (response != null && response.IsSuccess)
             {
-                TempData["success"] = "Cart updated successfully";
+                TempData["success"] = "Cart updated successfully"; 
                 return RedirectToAction(nameof(CartIndex));
             }
             return View();

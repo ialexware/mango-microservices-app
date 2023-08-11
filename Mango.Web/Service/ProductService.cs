@@ -12,6 +12,23 @@ namespace Mango.Web.Service
         {
             _baseService = baseService;
         }
+        public async Task<ResponseDto?> GetAllProductsAsync()
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = SD.ApiType.GET,
+                Url = SD.ProductAPIBase + "/api/product"
+            });
+        }
+
+        public async Task<ResponseDto?> GetProductByIdAsync(int id)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = SD.ApiType.GET,
+                Url = SD.ProductAPIBase + "/api/product/" + id
+            });
+        }
 
         public async Task<ResponseDto?> CreateProductAsync(ProductDto productDto)
         {
@@ -19,7 +36,19 @@ namespace Mango.Web.Service
             {
                 ApiType = SD.ApiType.POST,
                 Data = productDto,
-                Url = SD.ProductAPIBase + "/api/product/"
+                Url = SD.ProductAPIBase + "/api/product/",
+                ContentType = SD.ContentType.MultiPartFormData
+            });
+        }
+
+        public async Task<ResponseDto?> UpdateProductAsync(ProductDto productDto)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = SD.ApiType.PUT,
+                Data = productDto,
+                Url = SD.ProductAPIBase + "/api/product/",
+                ContentType = SD.ContentType.MultiPartFormData
             });
         }
 
@@ -32,32 +61,7 @@ namespace Mango.Web.Service
             });
         }
 
-        public async Task<ResponseDto?> GetAllProductsAsync()
-        {
-            return await _baseService.SendAsync(new RequestDto()
-            {
-                ApiType = SD.ApiType.GET,
-                Url = SD.ProductAPIBase + "/api/product"
-            });
-        }
 
-        public async Task<ResponseDto?> GetProductByIdAsyncAsync(int id)
-        {
-            return await _baseService.SendAsync(new RequestDto()
-            {
-                ApiType = SD.ApiType.GET,
-                Url = SD.ProductAPIBase + "/api/product/" + id
-            });
-        }
 
-        public async Task<ResponseDto?> UpdateProductAsync(ProductDto productDto)
-        {
-            return await _baseService.SendAsync(new RequestDto()
-            {
-                ApiType = SD.ApiType.PUT,
-                Data = productDto,
-                Url = SD.ProductAPIBase + "/api/product/"
-            });
-        }
     }
 }

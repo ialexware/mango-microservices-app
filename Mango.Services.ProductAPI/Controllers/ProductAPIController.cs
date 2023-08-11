@@ -58,14 +58,37 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public ResponseDto Post([FromBody] ProductDto productDto)
+        public ResponseDto Post(ProductDto productDto)
         {
             try
             {
                 Product product = _mapper.Map<Product>(productDto);
                 _db.Products.Add(product);
                 _db.SaveChanges();
-                _responseDto.Result = product;
+
+                if (productDto.Image != null)
+                {
+                    string fileName = $"{product.ProductId}{Path.GetExtension(productDto.Image.FileName)}";
+                    string filePath = $@"wwwroot\ProductImages\{fileName}";
+                    var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+                    using (FileStream fileStream = new FileStream(filePathDirectory, FileMode.Create))
+                    {
+                        productDto.Image.CopyTo(fileStream);
+                    }
+
+                    var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+
+                    product.ImageUrl = $"{baseUrl}/ProductImages/{fileName}";
+                    product.ImageLocalPathUrl = filePath;
+                }
+                else
+                {
+                    productDto.ImageUrl = "https://placehold.co//600x400";
+                }
+                _db.Products.Update(product);
+                _db.SaveChanges();
+
+                _responseDto.Result = _mapper.Map<ProductDto>(product);
             }
             catch (Exception ex)
             {
@@ -77,11 +100,38 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpPut]
         [Authorize(Roles = "ADMIN")]
-        public ResponseDto Put([FromBody] ProductDto productDto)
+        public ResponseDto Put(ProductDto productDto)
         {
             try
             {
                 Product product = _mapper.Map<Product>(productDto);
+
+                if (productDto.Image != null)
+                {
+                    if (!string.IsNullOrEmpty(product.ImageLocalPathUrl))
+                    {
+                        var oldFilePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPathUrl);
+                        FileInfo fileInfo = new FileInfo(oldFilePathDirectory);
+                        if (fileInfo.Exists)
+                        {
+                            fileInfo.Delete();
+                        }
+                    }
+
+                    string fileName = $"{product.ProductId}{Path.GetExtension(productDto.Image.FileName)}";
+                    string filePath = $@"wwwroot\ProductImages\{fileName}";
+                    var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+                    using (FileStream fileStream = new FileStream(filePathDirectory, FileMode.Create))
+                    {
+                        productDto.Image.CopyTo(fileStream);
+                    }
+
+                    var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+
+                    product.ImageUrl = $"{baseUrl}/ProductImages/{fileName}";
+                    product.ImageLocalPathUrl = filePath;
+                }
+
                 _db.Products.Update(product);
                 _db.SaveChanges();
                 _responseDto.Result = product;
@@ -107,6 +157,15 @@ namespace Mango.Services.ProductAPI.Controllers
                     _responseDto.IsSuccess = false;
                     _responseDto.Message = "Product not found";
                     return _responseDto;
+                }
+
+                if (!string.IsNullOrEmpty(product.ImageLocalPathUrl))
+                {
+                    var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPathUrl);
+                    if (System.IO.File.Exists(filePathDirectory))
+                    {
+                        System.IO.File.Delete(filePathDirectory);
+                    }
                 }
                 _db.Products.Remove(product);
                 _db.SaveChanges();

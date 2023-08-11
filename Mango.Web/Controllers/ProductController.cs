@@ -51,7 +51,7 @@ namespace Mango.Web.Controllers
 
         public async Task<IActionResult> ProductDelete(int productId)
         {
-            ResponseDto? response = await _productService.GetProductByIdAsyncAsync(productId);
+            ResponseDto? response = await _productService.GetProductByIdAsync(productId);
             if (response != null && response.IsSuccess)
             {
                 ProductDto? productDto = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
@@ -82,7 +82,7 @@ namespace Mango.Web.Controllers
 
         public async Task<IActionResult> ProductEdit(int productId)
         {
-            ResponseDto? response = await _productService.GetProductByIdAsyncAsync(productId);
+            ResponseDto? response = await _productService.GetProductByIdAsync(productId);
             if (response != null && response.IsSuccess)
             {
                 ProductDto? productDto = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));

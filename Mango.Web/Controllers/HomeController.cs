@@ -42,7 +42,7 @@ namespace Mango.Web.Controllers
         public async Task<IActionResult> ProductDetails(int productId)
         {
             ProductDto? product = new();
-            ResponseDto? response = await _productService.GetProductByIdAsyncAsync(productId);
+            ResponseDto? response = await _productService.GetProductByIdAsync(productId);
             if (response != null && response.IsSuccess)
             {
                 product = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
